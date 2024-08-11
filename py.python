@@ -1,0 +1,72 @@
+import os
+
+# Función para mostrar el menú principal
+def mostrar_menu():
+    print("\n--- Lista de Tareas ---")
+    print("1. Ver tareas")
+    print("2. Agregar tarea")
+    print("3. Eliminar tarea")
+    print("4. Salir")
+
+# Función para leer la lista de tareas desde un archivo
+def leer_tareas(archivo):
+    if not os.path.exists(archivo):
+        return []
+    with open(archivo, 'r') as f:
+        return f.read().splitlines()
+
+# Función para guardar la lista de tareas en un archivo
+def guardar_tareas(archivo, tareas):
+    with open(archivo, 'w') as f:
+        for tarea in tareas:
+            f.write(f"{tarea}\n")
+
+# Función para mostrar las tareas actuales
+def ver_tareas(tareas):
+    if not tareas:
+        print("\nNo hay tareas pendientes.")
+    else:
+        print("\nTareas pendientes:")
+        for i, tarea in enumerate(tareas, 1):
+            print(f"{i}. {tarea}")
+
+# Función para agregar una nueva tarea
+def agregar_tarea(tareas):
+    tarea = input("\nEscribe la nueva tarea: ")
+    tareas.append(tarea)
+    print(f"Tarea '{tarea}' agregada.")
+
+# Función para eliminar una tarea por su número
+def eliminar_tarea(tareas):
+    ver_tareas(tareas)
+    try:
+        num = int(input("\nIntroduce el número de la tarea a eliminar: "))
+        tarea_eliminada = tareas.pop(num - 1)
+        print(f"Tarea '{tarea_eliminada}' eliminada.")
+    except (ValueError, IndexError):
+        print("Número inválido.")
+
+def main():
+    archivo = "tareas.txt"
+    tareas = leer_tareas(archivo)
+
+    while True:
+        mostrar_menu()
+        opcion = input("Elige una opción (1-4): ")
+
+        if opcion == '1':
+            ver_tareas(tareas)
+        elif opcion == '2':
+            agregar_tarea(tareas)
+            guardar_tareas(archivo, tareas)
+        elif opcion == '3':
+            eliminar_tarea(tareas)
+            guardar_tareas(archivo, tareas)
+        elif opcion == '4':
+            print("¡Hasta luego!")
+            break
+        else:
+            print("Opción inválida, por favor elige entre 1 y 4.")
+
+if __name__ == "__main__":
+    main()
